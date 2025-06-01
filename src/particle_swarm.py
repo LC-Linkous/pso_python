@@ -10,7 +10,7 @@
 #       
 #
 #   Author(s):  Lauren Linkous, Jonathan Lundquist
-#   Last update: May 18, 2025
+#   Last update: June 1, 2025
 ##--------------------------------------------------------------------\
 
 import numpy as np
@@ -340,7 +340,7 @@ class swarm:
         return convergence
     
     def maxed(self):
-        max_iter = self.iter > self.maxit
+        max_iter = self.iter >= self.maxit
         return max_iter
     
     def complete(self):

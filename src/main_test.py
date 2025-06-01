@@ -10,7 +10,7 @@
 #       for integration in the AntennaCAT GUI.
 #
 #   Author(s): Jonathan Lundquist, Lauren Linkous
-#   Last update: May 18, 2025
+#   Last update: June 1, 2025
 ##--------------------------------------------------------------------\
 
 import pandas as pd
