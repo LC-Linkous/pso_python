@@ -109,29 +109,20 @@ class swarm:
             variation = ubound-lbound
 
 
+            # position
+            self.M = np.round(np.array(np.multiply(self.rng.random((1,np.max([heightl, widthl]))), variation)+lbound), self.number_decimals)
+            
+            # velocity
+            self.V = np.round(np.array(np.multiply(self.rng.random((1,np.max([heightl,widthl]))), vlimit)), self.number_decimals)
 
-            raw = np.multiply(self.rng.random((1,np.max([heightl, widthl]))), variation)+lbound   
-            self.M = np.array([[round(val, self.number_decimals) for val in row] for row in raw])  
-
-
-            raw = np.multiply(self.rng.random((1,np.max([heightl,widthl]))), vlimit)
-            self.V = np.array([[round(val, self.number_decimals) for val in row] for row in raw])
-
-
-            # self.M = np.array(np.multiply(self.rng.random((1,np.max([heightl, widthl]))), 
-            #                                                     variation)+lbound)    
-
-            # self.V = np.array(np.multiply(self.rng.random((1,np.max([heightl,widthl]))), 
-            #                                                          vlimit))
-                                                                     
+                                         
 
             for i in range(2,int(NO_OF_PARTICLES)+1):
                 
-                rawM = np.multiply(self.rng.random((1,np.max([heightl, widthl]))), variation)+lbound 
-                M = np.array([[round(val, self.number_decimals) for val in row] for row in rawM])  
+                M = np.round(np.array(np.multiply(self.rng.random((1,np.max([heightl, widthl]))), variation)+lbound), self.number_decimals)
 
-                rawV = np.multiply(self.rng.random((1,np.max([heightl,widthl]))), vlimit)
-                V = np.array([[round(val, self.number_decimals) for val in row] for row in rawV])
+                V = np.round(np.array(np.multiply(self.rng.random((1,np.max([heightl,widthl]))), vlimit)), self.number_decimals)
+
 
                 self.M = \
                     np.vstack([self.M, 
@@ -275,7 +266,7 @@ class swarm:
         for i in range(0,np.shape(self.V)[1]):        
 
             self.V[particle,i] = \
-                round(self.weights[0][0]* self.rng.random()*self.V[particle,i] \
+                np.round(self.weights[0][0]* self.rng.random()*self.V[particle,i] \
                 + self.weights[0][1]*self.rng.random()*(self.Pb[particle,i]-self.M[particle,i]) \
                 + self.weights[0][2]*self.rng.random()*(self.Gb[i]-self.M[particle,i])
                 , self.number_decimals)

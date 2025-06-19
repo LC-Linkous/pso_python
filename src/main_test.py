@@ -1,8 +1,8 @@
 #! /usr/bin/python3
 
 ##--------------------------------------------------------------------\
-#   pso_basic
-#   './pso_basic/src/main_test.py'
+#   pso_python
+#   './pso_python/src/main_test.py'
 #   Test function/example for using the 'swarm' class in particle_swarm.py.
 #       This has been modified from the original to include message 
 #       passing back to the parent class or testbench, rather than printing
@@ -10,7 +10,7 @@
 #       for integration in the AntennaCAT GUI.
 #
 #   Author(s): Jonathan Lundquist, Lauren Linkous
-#   Last update: June 1, 2025
+#   Last update: March 12, 2025
 ##--------------------------------------------------------------------\
 
 import pandas as pd
@@ -23,13 +23,15 @@ from particle_swarm import swarm
 import lundquist_3_var.configs_F as func_configs     # multi objective function
 
 
+
 if __name__ == "__main__":
     # Constant variables
     NO_OF_PARTICLES = 11         # Number of particles in swarm
+    T_MOD = 0.65                 # Variable time-step extinction coefficient
     TOL = 10 ** -18              # Convergence Tolerance
     MAXIT = 10000                # Maximum allowed iterations
     BOUNDARY = 1                 # int boundary 1 = random,      2 = reflecting
-                                 #              3 = absorbing,   4 = invisible
+                                    #              3 = absorbing,   4 = invisible
 
     # Objective function dependent variables
     func_F = func_configs.OBJECTIVE_FUNC  # objective function
@@ -47,8 +49,8 @@ if __name__ == "__main__":
     # 1 = use as threshold. value should be LESS THAN OR EQUAL to target
     # 2 = use as threshold. value should be GREATER THAN OR EQUAL to target
     #DEFAULT THRESHOLD
-    THRESHOLD = np.zeros_like(TARGETS) 
-    #THRESHOLD = np.ones_like(TARGETS)
+    #THRESHOLD = np.zeros_like(TARGETS) 
+    THRESHOLD = np.ones_like(TARGETS)
     #THRESHOLD = [0, 1, 0]
 
 
@@ -66,11 +68,11 @@ if __name__ == "__main__":
 
     # Constant variables in a list format
     opt_params = {'NO_OF_PARTICLES': [NO_OF_PARTICLES], # Number of particles in swarm
+                'T_MOD': [T_MOD],                       # Variable time-step extinction coefficient
                 'BOUNDARY': [BOUNDARY],                 # int boundary 1 = random,      2 = reflecting
-                                                        #   3 = absorbing,   4 = invisible
+                                                        #              3 = absorbing,   4 = invisible
                 'WEIGHTS': [WEIGHTS],                   # Update vector weights
-                'VLIM':  [VLIM] }                       # Initial velocity limit
-
+                'VLIM':  [VLIM] }     
     # dataframe conversion
     opt_df = pd.DataFrame(opt_params)
 
@@ -79,7 +81,8 @@ if __name__ == "__main__":
                             func_F, constr_F,
                             opt_df,
                             parent=parent, 
-                            evaluate_threshold=evaluate_threshold, obj_threshold=THRESHOLD)  
+                            evaluate_threshold=evaluate_threshold, obj_threshold=THRESHOLD,
+                            decimal_limit=5)  
 
     while not myOptimizer.complete():
         # step through optimizer processing
