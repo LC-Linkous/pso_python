@@ -37,10 +37,16 @@ class swarm:
                  obj_func, constr_func, 
                  opt_df,
                  parent=None, 
-                 evaluate_threshold=False, obj_threshold=None): 
+                 evaluate_threshold=False, obj_threshold=None,
+                 decimal_limit = 4): 
 
         # Optional parent class func call to write out values that trigger constraint issues
         self.parent = parent 
+
+
+        self.number_decimals = decimal_limit  # NEW FEATURE being tested to limit the number of decimals
+                                              # used in cases where real life has limitations on resolution
+
 
         #evaluation method for targets
         # True: Evaluate as true targets
@@ -102,24 +108,37 @@ class swarm:
             variation = ubound-lbound
 
 
-            self.M = np.array(np.multiply(self.rng.random((1,np.max([heightl, widthl]))), 
-                                                                variation)+lbound)    
 
-            self.V = np.array(np.multiply(self.rng.random((1,np.max([heightl,widthl]))), 
-                                                                     vlimit))
+            raw = np.multiply(self.rng.random((1,np.max([heightl, widthl]))), variation)+lbound   
+            self.M = np.array([[round(val, self.number_decimals) for val in row] for row in raw])  
+
+
+            raw = np.multiply(self.rng.random((1,np.max([heightl,widthl]))), vlimit)
+            self.V = np.array([[round(val, self.number_decimals) for val in row] for row in raw])
+
+
+            # self.M = np.array(np.multiply(self.rng.random((1,np.max([heightl, widthl]))), 
+            #                                                     variation)+lbound)    
+
+            # self.V = np.array(np.multiply(self.rng.random((1,np.max([heightl,widthl]))), 
+            #                                                          vlimit))
+                                                                     
 
             for i in range(2,int(NO_OF_PARTICLES)+1):
                 
+                rawM = np.multiply(self.rng.random((1,np.max([heightl, widthl]))), variation)+lbound 
+                M = np.array([[round(val, self.number_decimals) for val in row] for row in rawM])  
+
+                rawV = np.multiply(self.rng.random((1,np.max([heightl,widthl]))), vlimit)
+                V = np.array([[round(val, self.number_decimals) for val in row] for row in rawV])
+
                 self.M = \
                     np.vstack([self.M, 
-                               np.multiply( self.rng.random((1,np.max([heightl, widthl]))), 
-                                                                               variation) 
-                                                                               + lbound])
+                               M])
 
                 self.V = \
                     np.vstack([self.V,
-                               np.multiply( self.rng.random((1,np.max([heightl, widthl]))), 
-                                                                               vlimit)])
+                               V])
             '''
             self.M                      : An array of current particle locations.
             self.V                      : An array of current particle velocities.
@@ -255,9 +274,10 @@ class swarm:
         for i in range(0,np.shape(self.V)[1]):        
 
             self.V[particle,i] = \
-                self.weights[0][0]* self.rng.random()*self.V[particle,i] \
+                round(self.weights[0][0]* self.rng.random()*self.V[particle,i] \
                 + self.weights[0][1]*self.rng.random()*(self.Pb[particle,i]-self.M[particle,i]) \
                 + self.weights[0][2]*self.rng.random()*(self.Gb[i]-self.M[particle,i])
+                , self.number_decimals)
             
     def check_bounds(self, particle):
         update = 0
@@ -274,13 +294,28 @@ class swarm:
         # and may cause a buffer overflow with large exponents (a bug that was found experimentally)
         update = self.check_bounds(particle) or not self.constr_func(self.M[particle])
         if update > 0:
-            while(self.check_bounds(particle)>0) or (self.constr_func(self.M[particle])==False):
-                variation = self.ubound-self.lbound
-                self.M[particle] = \
-                    np.squeeze(self.rng.random() * 
-                                np.multiply(np.ones((1,np.shape(self.M)[1])),
-                                            variation) + self.lbound)
+            # while(self.check_bounds(particle)>0) or (self.constr_func(self.M[particle])==False):
+            #     variation = self.ubound-self.lbound
+            #     self.M[particle] = \
+            #         np.squeeze(self.rng.random() * 
+            #                     np.multiply(np.ones((1,np.shape(self.M)[1])),
+            #                                 variation) + self.lbound)
             
+
+            while (self.check_bounds(particle) > 0) or (self.constr_func(self.M[particle]) == False):
+                variation = self.ubound - self.lbound
+                self.M[particle] = np.round(
+                    np.squeeze(
+                        self.rng.random() *
+                        np.multiply(np.ones((1, np.shape(self.M)[1])), variation) +
+                        self.lbound
+                    ),
+                    self.number_decimals
+                )
+
+
+
+
     def reflecting_bound(self, particle):        
         update = self.check_bounds(particle)
         constr = self.constr_func(self.M[particle])
