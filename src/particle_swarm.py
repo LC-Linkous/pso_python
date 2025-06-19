@@ -368,8 +368,9 @@ class swarm:
     
     def update_point(self,particle):
         self.Mlast = 1*self.M[particle]
-        self.V[particle] = self.floating_point_error_handler("self.V[particle] ", self.V[particle] )        
-        self.M[particle] = self.M[particle] + self.V[particle]
+        # if enforcing decimal limit, no need to check floating point error handler anymore. 
+        #self.V[particle] = self.floating_point_error_handler("self.V[particle] ", self.V[particle] )        
+        self.M[particle] = np.round(self.M[particle] + self.V[particle], self.number_decimals)
 
     def converged(self):
         convergence = np.linalg.norm(self.F_Gb) < self.E_TOL
