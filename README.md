@@ -115,7 +115,8 @@ This is an example for if you've had a difficult time with the requirements.txt 
                             func_F, constr_F,
                             opt_df,
                             parent=parent, 
-                            evaluate_threshold=evaluate_threshold, obj_threshold=THRESHOLD)  
+                            evaluate_threshold=evaluate_threshold, obj_threshold=THRESHOLD,
+                            decimal_limit = 4)  
 
 
     # arguments should take the form: 
@@ -123,8 +124,9 @@ This is an example for if you've had a difficult time with the requirements.txt 
     # func, func,
     # dataFrame,
     # class obj, 
-    # bool, [int, int, ...]) 
-    #  
+    # bool, [int, int, ...], 
+    # int) 
+    # 
     # opt_df contains class-specific tuning parameters
     # NO_OF_PARTICLES: int
     # weights: [[float, float, float]]

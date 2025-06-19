@@ -24,7 +24,8 @@ class swarm:
     # func, func,
     # dataFrame,
     # class obj, 
-    # bool, [int, int, ...]) 
+    # bool, [int, int, ...], 
+    # int) 
     #  
     # opt_df contains class-specific tuning parameters
     # NO_OF_PARTICLES: int
@@ -44,7 +45,7 @@ class swarm:
         self.parent = parent 
 
 
-        self.number_decimals = decimal_limit  # NEW FEATURE being tested to limit the number of decimals
+        self.number_decimals = int(decimal_limit)  # NEW FEATURE being tested to limit the number of decimals
                                               # used in cases where real life has limitations on resolution
 
 
