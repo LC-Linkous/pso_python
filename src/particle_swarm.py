@@ -286,14 +286,6 @@ class swarm:
         # and may cause a buffer overflow with large exponents (a bug that was found experimentally)
         update = self.check_bounds(particle) or not self.constr_func(self.M[particle])
         if update > 0:
-            # while(self.check_bounds(particle)>0) or (self.constr_func(self.M[particle])==False):
-            #     variation = self.ubound-self.lbound
-            #     self.M[particle] = \
-            #         np.squeeze(self.rng.random() * 
-            #                     np.multiply(np.ones((1,np.shape(self.M)[1])),
-            #                                 variation) + self.lbound)
-            
-
             while (self.check_bounds(particle) > 0) or (self.constr_func(self.M[particle]) == False):
                 variation = self.ubound - self.lbound
                 self.M[particle] = np.round(
@@ -302,8 +294,6 @@ class swarm:
                         np.multiply(np.ones((1, np.shape(self.M)[1])), variation) +
                         self.lbound
                     ), self.number_decimals)
-
-
 
 
 
