@@ -45,7 +45,7 @@ class swarm:
         self.parent = parent 
 
 
-        self.number_decimals = int(decimal_limit)  # NEW FEATURE being tested to limit the number of decimals
+        self.number_decimals = int(decimal_limit)  # limit the number of decimals
                                               # used in cases where real life has limitations on resolution
 
 
@@ -301,9 +301,8 @@ class swarm:
                         self.rng.random() *
                         np.multiply(np.ones((1, np.shape(self.M)[1])), variation) +
                         self.lbound
-                    ),
-                    self.number_decimals
-                )
+                    ), self.number_decimals)
+
 
 
 
