@@ -34,7 +34,7 @@ PSO consists of a population (or swarm) of candidate solutions called particles.
 
 ## Requirements
 
-This project requires numpy, pandas, and matplotlib for the full demos. To run the optimizer without visualization, only numpy and pandas are requirements
+This project requires numpy, pandas, and matplotlib for the full demos. To run the optimizer without visualization, only numpy and pandas are requirements.
 
 Use 'pip install -r requirements.txt' to install the following dependencies:
 
