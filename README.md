@@ -10,6 +10,7 @@ pso_basic has been updated to increase modularity with the optimizer suite colle
 * [Implementation](#implementation)
     * [Initialization](#initialization) 
     * [State Machine-based Structure](#state-machine-based-structure)
+    * [Importing and Exporting Optimizer State](#importing-and-exporting-optimizer-state)
     * [Constraint Handling](#constraint-handling)
     * [Boundary Types](#boundary-types)
     * [Multi-Objective Optimization](#multi-objective-optimization)
@@ -115,7 +116,8 @@ This is an example for if you've had a difficult time with the requirements.txt 
                             func_F, constr_F,
                             opt_df,
                             parent=parent, 
-                            evaluate_threshold=evaluate_threshold, obj_threshold=THRESHOLD)  
+                            evaluate_threshold=evaluate_threshold, obj_threshold=THRESHOLD,
+                            decimal_limit = 4)  
 
 
     # arguments should take the form: 
@@ -123,8 +125,9 @@ This is an example for if you've had a difficult time with the requirements.txt 
     # func, func,
     # dataFrame,
     # class obj, 
-    # bool, [int, int, ...]) 
-    #  
+    # bool, [int, int, ...], 
+    # int) 
+    # 
     # opt_df contains class-specific tuning parameters
     # NO_OF_PARTICLES: int
     # weights: [[float, float, float]]
@@ -174,6 +177,30 @@ The code below is an example of this process:
                 print("Best Eval")
                 print(best_eval)
 ```
+### Importing and Exporting Optimizer State
+
+Some optimizer information can be exported or imported. This varies based on each optimizer.
+
+Optimizer state can be exported at any step. When importing an optimizer state, the optimizer should be initialized first, and then the state information can be imported via a Python pickle file. Other methods can be used if custom code is written to handle preprocessing.
+
+
+Returning data from optimizer and saving to a .pkl file:
+```python
+    data = demo_optimizer.export_swarm()
+    data_df = pd.DataFrame(data)
+    print(data_df)
+    data_df.to_pickle('output_data_df.pkl')
+
+```
+
+
+Importing data from a .pkl file and importing it into the optimizer:
+```python
+    data_df = pd.read_pickle('output_data_df.pkl') 
+    demo_optimizer.import_swarm(data_df)
+
+```
+
 
 ### Constraint Handling
 Users must create their own constraint function for their problems, if there are constraints beyond the problem bounds.  This is then passed into the constructor. If the default constraint function is used, it always returns true (which means there are no constraints).
